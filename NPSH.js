@@ -6,7 +6,7 @@ const calculo = document.querySelector('#heat');
 let tempBoton = document.querySelector('#temperatura');
 const tempUnidad = document.createElement('p');
 tempUnidad.classList.add('texto');
-tempUnidad.setAttribute('id','grados'); 
+tempUnidad.setAttribute('id', 'grados');
 calculo.classList.add('unidad');
 calculo.appendChild(tempUnidad);
 
@@ -74,7 +74,7 @@ const altUnidad = document.createElement('p');
 altUnidad.classList.add('texto');
 
 const result = document.createElement('p');
-result.textContent = `NPSH disp`; 
+result.textContent = `NPSH disp`;
 datos.appendChild(altUnidad);
 
 
@@ -102,10 +102,10 @@ function calcNPSH(sentido) {
     result.textContent = `NPSH disp : ${resultado} (mts)`;
 }
 
-let perdida = document.querySelector('#perdida'); 
-let altura = document.querySelector('#altura'); 
+let perdida = document.querySelector('#perdida');
+let altura = document.querySelector('#altura');
 
-let unidadArr = [perdida, altura]; 
+let unidadArr = [perdida, altura];
 
 //incluye la unidad al modificar "datos"    
 unidadArr.forEach(element => {
@@ -120,8 +120,8 @@ abajo.textContent = 'Fluido por encima de la bomba';
 const arriba = document.createElement('button');
 arriba.textContent = 'Fluido por abajo de la bomba';
 
-abajo.classList.add('boton'); 
-arriba.classList.add('boton'); 
+abajo.classList.add('boton');
+arriba.classList.add('boton');
 
 
 final.appendChild(abajo);
@@ -135,4 +135,66 @@ arriba.addEventListener('click', () => calcNPSH(negativo));
 
 //segunda parte de la pag 
 
-const perdida = document.querySelector('#perdida')
+const friccionCalculo = document.querySelector('#friccion');
+
+let reValor = document.createElement('p');
+reValor.textContent = `Reynolds:`;
+let rugosidadValor = document.createElement('p');
+rugosidadValor.textContent = `Rugosidad Relativa: `;
+friccionCalculo.appendChild(reValor);
+friccionCalculo.appendChild(rugosidadValor);
+
+
+function reynolds(diametro, espesor, caudal, viscosidad, text) {
+
+    let q = caudal / 60000;
+    let dInt = diametro - (2 * espesor);
+    let d = dInt / 1000;
+    let area = (Math.PI / 4 * d ** 2).toFixed(4);
+    let velocidad = q / area;
+
+    let v = viscosidad / 1000000
+
+    let re =( velocidad * d / v).toFixed(4) ;
+    if (text == true) {
+        reValor.textContent = `Reynolds: ${re} `;
+    }
+    else {
+
+    }
+    return re;
+};
+
+function rugosidad(rugosidad, espesor, diametro, text) {
+    let dInt = diametro - (2 * espesor);
+
+    let rug = (rugosidad / dInt).toFixed(7) ;
+    if (text == true) {
+        rugosidadValor.textContent = `Rugosidad Relativa: ${rug} `;
+    }
+    else {
+
+    }
+    return rug;
+}
+
+
+function reRu() {
+
+    let d = document.querySelector('#diametro').value;
+    let e = document.querySelector('#espesor').value;
+    let q = document.querySelector('#caudal').value;
+    let v = document.querySelector('#viscosidad').value;
+    let rug = document.querySelector('#rugosidad').value;
+
+    reynolds(d, e, q, v, true);
+    rugosidad(rug, e, d, true);
+
+}
+let input = document.querySelectorAll('.datoF');
+let arrInput = [input];
+
+arrInput.forEach(element => {
+    addEventListener('change', () => reRu())
+});
+
